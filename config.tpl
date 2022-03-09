@@ -1,12 +1,13 @@
 #!/bin/sh
-echo "Hello World" > /root/hello-world.txt
-echo "Starting" >> /tmp/testCentral.md
-echo "${chain}" >> /tmp/testCentral.md
+bash
 
+echo "Hello World" > /root/hello-world.txt
+echo "Starting" >> /home/ubuntu/testCentral.md
+echo "${chain}" >> /home/ubuntu/testCentral.md
+echo "index: ${index}" >> /home/ubuntu/testCentral.md           #DEBUG
 
 apt update -y
 apt install -y jq python zip curl tmux
-
 
 
 if [ "${centralLogging}" = true ]
@@ -32,12 +33,19 @@ rm /home/ubuntu/masqBin.zip
 rm /home/ubuntu/generated.tar.gz
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
-echo "1" >> /home/ubuntu/testCentral.md                                     #DEBUG
+echo "1" >> /home/ubuntu/testCentral.md                                                 #DEBUG
+echo "ip=\"$${ip}\"" >> /home/ubuntu/testCentral.md                                     #DEBUG
+echo "centralNighbors = ${centralNighbors}" >> /home/ubuntu/testCentral.md                                     #DEBUG
+
+
 if [ "${centralNighbors}" = true ]
 then
-    arr=( $(curl -s https://dev.api.masq.ai/nodes/${chain} | jq -r '.[].descriptor') )
+    echo "1.5" >> /home/ubuntu/testCentral.md                                                 #DEBUG
+    arr="( $(curl -s https://dev.api.masq.ai/nodes/${chain} | jq -r '.[].descriptor') )"
     printf -v joined '%s,' "$${arr[@]}"
     echo "Testing 3" >> /home/ubuntu/testCentral.md
+else
+    echo "else" >> /home/ubuntu/testCentral.md
 fi
 
 echo "2" >> /home/ubuntu/testCentral.md                                     #DEBUG

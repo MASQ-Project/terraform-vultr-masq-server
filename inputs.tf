@@ -1,6 +1,35 @@
 #TODO
 
 
+variable "API_KEY" {
+  type        = string
+  default     = ""
+  description = "Vultr API KEY"
+}
+
+
+variable "vultr_plan" {
+  type        = string
+  default     = "vc2-1c-1gb"
+  description = "Vultr Plan ID: "
+}
+
+variable "vultr_region" {
+  type        = string
+  default     = "mel"   # Melbourne
+  description = "Vultr Region ID: "
+}
+
+variable "vultr_os" {
+  type        = string
+  default     = "517"   # Ubuntu 21.10 x64
+  description = "Vultr OS ID: "
+}
+
+
+
+
+
 variable "clandestine_port" {
   type        = number
   default     = null

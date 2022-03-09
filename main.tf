@@ -3,10 +3,6 @@
 # | python -m json.tool
 
 
-
-
-
-
 terraform {
   required_providers {
     vultr = {
@@ -18,17 +14,15 @@ terraform {
 
 # Configure the Vultr Provider
 provider "vultr" {
-  api_key = "XVJ5G4N5YZFWW5DTYDJDDG75P6YTGJNKNPUA"
+  api_key = var.API_KEY
   rate_limit = 700
   retry_limit = 3
 }
-
 
 resource "random_integer" "port" {
   min = 1025
   max = 65000
 }
-
 
 # Testing Added Firewall Rules
 resource "vultr_firewall_group" "node_firewall" {
@@ -69,11 +63,14 @@ resource "vultr_firewall_rule" "firewallrule2" {
 
 
 
+
+
 # Creates Basic instance, Ubuntu 21, Melbourne 
 resource "vultr_instance" "my_instance" {
-    plan                 = "vc2-1c-1gb"      # vc2-1c-1gb
-    region               = "mel"             # Melbourne
-    os_id                = "517"             # Ubuntu 21.10 x64
+    count                = var.instance_count
+    plan                 = var.vultr_plan     # "vc2-1c-1gb"      # vc2-1c-1gb
+    region               = var.vultr_region   # "mel"             # Melbourne
+    os_id                = var.vultr_os       # "517"             # Ubuntu 21.10 x64
     firewall_group_id    = vultr_firewall_group.node_firewall.id
 
     user_data = templatefile("${path.module}/config.tpl", {
@@ -92,7 +89,7 @@ resource "vultr_instance" "my_instance" {
        customnNighbors    = var.customnNighbors
       #  agent_config       = base64encode(file("${path.module}/amazon-cloudwatch-agent.json"))    #TODO
       agent_config         = ""                                                                    #TODO
-      #  index              = count.index                                                          #TODO
+      index              = count.index                                                          #TODO
       #  mnemonicAddress    = element(var.mnemonic_list, count.index)                              #TODO
       #  earnwalletAddress  = element(var.earnwallet_list, count.index)                            #TODO
 
