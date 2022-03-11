@@ -1,10 +1,26 @@
 #!/bin/sh
-bash
-
 echo "Hello World" > /root/hello-world.txt
 echo "Starting" >> /home/ubuntu/testCentral.md
 echo "${chain}" >> /home/ubuntu/testCentral.md
 echo "index: ${index}" >> /home/ubuntu/testCentral.md           #DEBUG
+echo "earnwalletAddress: ${earnwalletAddress}" >> /home/ubuntu/testCentral.md           #DEBUG
+echo "earnwalletAddress: ${earnwalletAddressindex}" >> /home/ubuntu/testCentral.md           #DEBUG
+echo "+---------------+" >> /home/ubuntu/testCentral.md           #DEBUG
+echo "mnemonicAddress: ${mnemonicAddress}" >> /home/ubuntu/testCentral.md           #DEBUG
+
+
+
+ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+if [ -z "$ip" ]
+then
+    echo "+-- DNS FIX Applyed --+" >> /home/ubuntu/testCentral.md
+    echo "nameserver 1.1.1.1" > /etc/resolv.conf
+    sleep 5s
+    ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+fi
+
+sudo ufw allow "${clandestine_port}"
+
 
 apt update -y
 apt install -y jq python zip curl tmux
@@ -31,7 +47,7 @@ chmod 755 /home/ubuntu/masq
 rm -rf /home/ubuntu/generated/
 rm /home/ubuntu/masqBin.zip
 rm /home/ubuntu/generated.tar.gz
-ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+
 
 echo "1" >> /home/ubuntu/testCentral.md                                                 #DEBUG
 echo "ip=\"$${ip}\"" >> /home/ubuntu/testCentral.md                                     #DEBUG
@@ -55,7 +71,7 @@ echo "blockchain-service-url=\"${bcsurl}\"" >> /home/ubuntu/masq/config.toml
 echo "clandestine-port=\"${clandestine_port}\"" >> /home/ubuntu/masq/config.toml
 echo "db-password=\"${dbpass}\"" >> /home/ubuntu/masq/config.toml
 echo "dns-servers=\"${dnsservers}\"" >> /home/ubuntu/masq/config.toml
-#echo "earning-wallet=\"${earnwallet}\"" >> /home/ubuntu/masq/config.toml
+
 echo "gas-price=\"${gasprice}\"" >> /home/ubuntu/masq/config.toml
 echo "ip=\"$${ip}\"" >> /home/ubuntu/masq/config.toml
 echo "log-level=\"trace\"" >> /home/ubuntu/masq/config.toml
@@ -101,8 +117,19 @@ systemctl enable MASQNode.service
 systemctl start MASQNode.service
 sleep 5s
 /usr/local/bin/masq set-password "${dbpass}"
-#/usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonic}" --earning-path "m/44'/60'/0'/0/0" #
-/usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+
+
+
+if [ "${earnwalletAddressindex}" -eq "0" ]
+then
+   echo "Switching Wallet setup " >> /home/ubuntu/testCentral.md           #DEBUG
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase ""${mnemonicAddress}"" --earning-path "m/44'/60'/0'/0/0" #
+else
+   echo "Using Standard Wallet Setup " >> /home/ubuntu/testCentral.md           #DEBUG 
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+fi
+# /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+
 /usr/local/bin/masq shutdown
 sleep 2s
 systemctl stop MASQNode.service
