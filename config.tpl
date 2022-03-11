@@ -1,39 +1,26 @@
 #!/bin/sh
-echo "Hello World" > /root/hello-world.txt
-echo "Starting" >> /home/ubuntu/testCentral.md
-echo "${chain}" >> /home/ubuntu/testCentral.md
-echo "index: ${index}" >> /home/ubuntu/testCentral.md           #DEBUG
-echo "earnwalletAddress: ${earnwalletAddress}" >> /home/ubuntu/testCentral.md           #DEBUG
-echo "earnwalletAddress: ${earnwalletAddressindex}" >> /home/ubuntu/testCentral.md           #DEBUG
-echo "+---------------+" >> /home/ubuntu/testCentral.md           #DEBUG
-echo "mnemonicAddress: ${mnemonicAddress}" >> /home/ubuntu/testCentral.md           #DEBUG
-
-
+echo "Starting" >> /home/ubuntu/debug.txt
 
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+### Applyed this to Fix a very strange issue where a VM would sometimes boot up with its system DNS being blocked by Vultrs Firewall
 if [ -z "$ip" ]
 then
-    echo "+-- DNS FIX Applyed --+" >> /home/ubuntu/testCentral.md
+    echo "+-- DNS FIX Applyed --+" >> /home/ubuntu/debug.txt
     echo "nameserver 1.1.1.1" > /etc/resolv.conf
     sleep 5s
     ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 fi
 
-sudo ufw allow "${clandestine_port}"
-
-
 apt update -y
 apt install -y jq python zip curl tmux
+sudo ufw allow "${clandestine_port}"
 
 
 if [ "${centralLogging}" = true ]
 then
-    echo "Enabling cloudwatch logs"
     curl https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb -O
     sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
     echo "${agent_config}" | base64 -d >> /home/ubuntu/amazon-cloudwatch-agent.json
-else
-    echo "Cloudwatch logs not enabled"
 fi
 
 curl -so /home/ubuntu/masqBin.zip ${downloadurl}
@@ -48,37 +35,22 @@ rm -rf /home/ubuntu/generated/
 rm /home/ubuntu/masqBin.zip
 rm /home/ubuntu/generated.tar.gz
 
-
-echo "1" >> /home/ubuntu/testCentral.md                                                 #DEBUG
-echo "ip=\"$${ip}\"" >> /home/ubuntu/testCentral.md                                     #DEBUG
-echo "centralNighbors = ${centralNighbors}" >> /home/ubuntu/testCentral.md                                     #DEBUG
-
-
 if [ "${centralNighbors}" = true ]
 then
-    echo "1.5" >> /home/ubuntu/testCentral.md                                                 #DEBUG
     arr="( $(curl -s https://dev.api.masq.ai/nodes/${chain} | jq -r '.[].descriptor') )"
     printf -v joined '%s,' "$${arr[@]}"
-    echo "Testing 3" >> /home/ubuntu/testCentral.md
-else
-    echo "else" >> /home/ubuntu/testCentral.md
 fi
-
-echo "2" >> /home/ubuntu/testCentral.md                                     #DEBUG
 
 echo "chain=\"${chain}\"" >> /home/ubuntu/masq/config.toml
 echo "blockchain-service-url=\"${bcsurl}\"" >> /home/ubuntu/masq/config.toml
 echo "clandestine-port=\"${clandestine_port}\"" >> /home/ubuntu/masq/config.toml
 echo "db-password=\"${dbpass}\"" >> /home/ubuntu/masq/config.toml
 echo "dns-servers=\"${dnsservers}\"" >> /home/ubuntu/masq/config.toml
-
 echo "gas-price=\"${gasprice}\"" >> /home/ubuntu/masq/config.toml
 echo "ip=\"$${ip}\"" >> /home/ubuntu/masq/config.toml
 echo "log-level=\"trace\"" >> /home/ubuntu/masq/config.toml
 echo "neighborhood-mode=\"standard\"" >> /home/ubuntu/masq/config.toml
 echo "real-user=\"1000:1000:/home/ubuntu\"" >> /home/ubuntu/masq/config.toml
-
-echo "3" >> /home/ubuntu/testCentral.md                                    #DEBUG
 
 if [ -z "$${arr}" ]
 then
@@ -86,15 +58,10 @@ then
 else
     echo "#neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
 fi
-
-
 if [ "${centralNighbors}" = false ]
 then
     echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
 fi
-
-echo "4" >> /home/ubuntu/testCentral.md                                     #DEBUG
-
 
 chown ubuntu:ubuntu /home/ubuntu/masq/config.toml
 chmod 755 /home/ubuntu/masq/config.toml
@@ -118,17 +85,12 @@ systemctl start MASQNode.service
 sleep 5s
 /usr/local/bin/masq set-password "${dbpass}"
 
-
-
 if [ "${earnwalletAddressindex}" -eq "0" ]
 then
-   echo "Switching Wallet setup " >> /home/ubuntu/testCentral.md           #DEBUG
    /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase ""${mnemonicAddress}"" --earning-path "m/44'/60'/0'/0/0" #
 else
-   echo "Using Standard Wallet Setup " >> /home/ubuntu/testCentral.md           #DEBUG 
    /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
 fi
-# /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
 
 /usr/local/bin/masq shutdown
 sleep 2s
@@ -137,7 +99,4 @@ sleep 5s
 systemctl start MASQNode.service
 #amazon-cloudwatch-agent-ctl -a fetch-config -s -m ec2 -c file:/home/ubuntu/amazon-cloudwatch-agent.json
 
-echo "Finished" >> /home/ubuntu/testCentral.md                              #DEBUG
-echo "done" 
-
-
+echo "Finished" >> /home/ubuntu/debug.txt                              #DEBUG

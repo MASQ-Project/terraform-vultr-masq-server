@@ -24,15 +24,11 @@ resource "random_integer" "port" {
 
 # Create Firewall Group
 resource "vultr_firewall_group" "node_firewall" {
-    # count                = var.instance_count
-    # description          = "Terra-Firewall-${count.index + 1}"
     description          = "Terra-Firewall"
 }
 
 # Add Rule to Firewall Group
 resource "vultr_firewall_rule" "firewallrule0" {
-    # count                = var.instance_count
-    # firewall_group_id    = vultr_firewall_group.node_firewall[count.index].id
     firewall_group_id    = vultr_firewall_group.node_firewall.id
     protocol             = "tcp"
     ip_type              = "v4"
@@ -44,8 +40,6 @@ resource "vultr_firewall_rule" "firewallrule0" {
 
 # Add Rule to Firewall Group
 resource "vultr_firewall_rule" "firewallrule1" {
-    # count                = var.instance_count
-    # firewall_group_id    = vultr_firewall_group.node_firewall[count.index].id
     firewall_group_id    = vultr_firewall_group.node_firewall.id
     protocol             = "tcp"
     ip_type              = "v4"
@@ -57,8 +51,6 @@ resource "vultr_firewall_rule" "firewallrule1" {
 
 # Add Rule to Firewall Group
 resource "vultr_firewall_rule" "firewallrule2" {
-    # count                = var.instance_count
-    # firewall_group_id    = vultr_firewall_group.node_firewall[count.index].id
     firewall_group_id    = vultr_firewall_group.node_firewall.id
     protocol             = "tcp"
     ip_type              = "v6"
