@@ -87,9 +87,9 @@ sleep 5s
 
 if [ "${earnwalletAddressindex}" -eq "0" ]
 then
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase ""${mnemonicAddress}"" --earning-path "m/44'/60'/0'/0/0" #
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-path "m/44'/60'/0'/0/0"
 else
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
 fi
 
 /usr/local/bin/masq shutdown
