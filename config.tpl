@@ -35,12 +35,20 @@ rm -rf /home/ubuntu/generated/
 rm /home/ubuntu/masqBin.zip
 rm /home/ubuntu/generated.tar.gz
 
+    
+echo "1" >> /home/ubuntu/debug.txt
 if [ "${centralNighbors}" = true ]
 then
-    arr="( $(curl -s https://dev.api.masq.ai/nodes/${chain} | jq -r '.[].descriptor') )"
-    printf -v joined '%s,' "$${arr[@]}"
+    # arr=$(curl -s https://dev.api.masq.ai/nodes/polygon-mumbai | jq -r '.[].descriptor')
+    arr=$(curl -s https://dev.api.masq.ai/nodes/${chain} | jq -r '.[].descriptor')
+    echo "#!/bin/bash"  >> /home/ubuntu/test.sh
+    echo "tr '\\n' , <<< \"$${arr}\""  >> /home/ubuntu/test.sh
+    chmod +x /home/ubuntu/test.sh
+    joined=$("/home/ubuntu/test.sh")
+    rm /home/ubuntu/test.sh
 fi
 
+echo "2" >> /home/ubuntu/debug.txt
 echo "chain=\"${chain}\"" >> /home/ubuntu/masq/config.toml
 echo "blockchain-service-url=\"${bcsurl}\"" >> /home/ubuntu/masq/config.toml
 echo "clandestine-port=\"${clandestine_port}\"" >> /home/ubuntu/masq/config.toml
@@ -52,16 +60,21 @@ echo "log-level=\"trace\"" >> /home/ubuntu/masq/config.toml
 echo "neighborhood-mode=\"standard\"" >> /home/ubuntu/masq/config.toml
 echo "real-user=\"1000:1000:/home/ubuntu\"" >> /home/ubuntu/masq/config.toml
 
+
+
+
+echo "3" >> /home/ubuntu/debug.txt
 if [ -z "$${arr}" ]
 then
     echo "starting bootstrapped."
 else
-    echo "#neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
+    echo "neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
 fi
 if [ "${centralNighbors}" = false ]
 then
     echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
 fi
+echo "4" >> /home/ubuntu/debug.txt
 
 chown ubuntu:ubuntu /home/ubuntu/masq/config.toml
 chmod 755 /home/ubuntu/masq/config.toml
@@ -87,9 +100,9 @@ sleep 5s
 
 if [ "${earnwalletAddressindex}" -eq "0" ]
 then
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-path "m/44'/60'/0'/0/0"
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase ""${mnemonicAddress}"" --earning-path "m/44'/60'/0'/0/0" #
 else
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
 fi
 
 /usr/local/bin/masq shutdown
@@ -98,5 +111,27 @@ systemctl stop MASQNode.service
 sleep 5s
 systemctl start MASQNode.service
 #amazon-cloudwatch-agent-ctl -a fetch-config -s -m ec2 -c file:/home/ubuntu/amazon-cloudwatch-agent.json
-
 echo "Finished" >> /home/ubuntu/debug.txt                              #DEBUG
+
+
+sleep 15s
+su ubuntu
+descr=$(masq descriptor | grep -oE '[a-zA-Z0-9_.-]*@[0-9].*')
+hostname >> /home/ubuntu/info.txt
+echo "$${ip}" >> /home/ubuntu/info.txt
+echo "$${descr}" | grep -oE '[a-zA-Z0-9_.-]*@[0-9].*' >> /home/ubuntu/info.txt
+echo "$${descr}" | grep -oE '[a-zA-Z0-9_.-]*@[0-9].*' >> /home/ubuntu/descriptor.txt
+echo "curl --request POST 'https://dev.api.masq.ai/nodes' --header 'Content-Type: application/json' --data-raw '{\"chain\":\"polygon-mumbai\",\"descriptor\":\"$${descr}\"}'" >> /home/ubuntu/saveDescriptor.txt
+echo "10" >> /home/ubuntu/debug.txt
+
+if [ "${pushDescriptor}" = true ]
+then
+    echo "11" >> /home/ubuntu/debug.txt
+    chmod +x /home/ubuntu/saveDescriptor.txt
+    ./home/ubuntu/saveDescriptor.txt
+    echo "Saved Descriptor" >> /home/ubuntu/debug.txt                              #DEBUG
+else
+    echo "12" >> /home/ubuntu/debug.txt
+    echo "Descriptor NOT Saved" >> /home/ubuntu/debug.txt                              #DEBUG
+fi
+echo "FIN" >> /home/ubuntu/debug.txt

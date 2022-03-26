@@ -10,12 +10,12 @@ variable "vultr_plan" {
 }
 variable "vultr_region" {
   type        = string
-  default     = "mel"   # Melbourne
+  default     = "mel"
   description = "Vultr Region ID: "
 }
 variable "vultr_os" {
   type        = string
-  default     = "517"   # Ubuntu 21.10 x64
+  default     = "387"
   description = "Vultr OS ID: "
 }
 variable "clandestine_port" {
@@ -70,7 +70,7 @@ variable "customnNighbors" {
 }
 variable "centralNighbors" {
   type        = bool
-  description = "Gets official MASQ Node Descriptors"
+  description = "Gets official MASQ Node Descriptors. (customnNighbors) will be ignored"
   default     = false
 }
 variable "instance_count" {
@@ -94,4 +94,8 @@ variable "downloadurl" {
   default     = ""
 }
 
-
+variable "pushDescriptor" {
+  type        = bool
+  description = "POST's the Descriptor to Cloud Node API"
+  default     = false
+}

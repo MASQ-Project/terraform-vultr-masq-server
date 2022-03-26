@@ -43,11 +43,12 @@ No requirements.
 | <a name="input_gasprice"></a> [gasprice](#input\_gasprice) | The gas price you are willing to pay to settle transactions. | `number` | `50` | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The name of the SSH Key Pair you want to use. | `string` | `""` | no |
 | <a name="input_customnNighbors"></a> [customnNighbors](#input\_customnNighbors) | Node Descriptors for connecting to the MASQ network. Separate with a ','. | `string` | `""` | no |
-| <a name="input_centralNighbors"></a> [centralNighbors](#input\_centralNighbors) | Gets official MASQ Node Descriptors. | `bool` | `false` | no |
+| <a name="input_centralNighbors"></a> [centralNighbors](#input\_centralNighbors) | Gets official MASQ Node Descriptors. [customnNighbors](#input\_customnNighbors) will be ignored | `bool` | `false` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances to create. | `number` | `1` | no |
 | <a name="input_mnemonic_list"></a> [mnemonic\_list](#input\_mnemonic\_list) | List of mnemonic. | `list` | `[""]` | yes |
 | <a name="input_earnwallet_list"></a> [earnwallet\_list](#input\_earnwallet\_list) | List of earnwallets. | `list` | `[""]` | no |
 | <a name="input_downloadurl"></a> [downloadurl](#input\_downloadurl) | URL of MASQ bin file, .zip formatt. | `string` | `""` | yes |
+| <a name="input_pushDescriptor"></a> [pushDescriptor](#input\_pushDescriptor) | POST's Nodes Descriptor to Cloud_List API | `bool` | `false` | no |
 
 
 
