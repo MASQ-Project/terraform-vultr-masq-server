@@ -64,16 +64,24 @@ echo "real-user=\"1000:1000:/home/ubuntu\"" >> /home/ubuntu/masq/config.toml
 
 
 echo "3" >> /home/ubuntu/debug.txt
-if [ -z "$${arr}" ]
+
+
+if [ "${masterNode}" = true ]
 then
-    echo "starting bootstrapped."
+    echo "#neighbors=\"\"" >> /home/ubuntu/masq/config.toml 
 else
-    echo "neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
+    if [ -z "$${arr}" ]
+    then
+        echo "starting bootstrapped."
+    else
+        echo "neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
+    fi
+    if [ "${centralNighbors}" = false ]
+    then
+        echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+    fi
 fi
-if [ "${centralNighbors}" = false ]
-then
-    echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
-fi
+
 echo "4" >> /home/ubuntu/debug.txt
 
 chown ubuntu:ubuntu /home/ubuntu/masq/config.toml
@@ -93,28 +101,63 @@ echo "ExecStop=/usr/bin/tmux kill-session -t masq" >> /etc/systemd/system/MASQNo
 echo "" >> /etc/systemd/system/MASQNode.service
 echo "[Install]" >> /etc/systemd/system/MASQNode.service
 echo "WantedBy=multi-user.target" >> /etc/systemd/system/MASQNode.service
+
+# >> Sleep timer on Random from 1 - 31 secconds
+# timer=$(( $RANDOM % 30 + 1 ))
+echo "Sleep..." >> /home/ubuntu/debug.txt
+timer=$(shuf -i 0-30 -n1)
+echo "Timer: $${timer}" >> /home/ubuntu/debug.txt
+sleep $${timer}
+
+
+
+
 systemctl enable MASQNode.service
 systemctl start MASQNode.service
-sleep 5s
+sleep 5
 /usr/local/bin/masq set-password "${dbpass}"
 
-if [ "${earnwalletAddressindex}" -eq "0" ]
+
+
+
+echo "cycleDerivation: ${cycleDerivation}" >> /home/ubuntu/debug.txt
+echo "derivationIndex: ${derivationIndex}" >> /home/ubuntu/debug.txt
+echo "masterNode: ${masterNode}" >> /home/ubuntu/debug.txt
+echo "index: ${index}" >> /home/ubuntu/debug.txt
+
+#walletIndex=$(${derivationIndex} + ${index})
+
+
+
+if [ "${cycleDerivation}" = true ]
 then
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-path "m/44'/60'/0'/0/0" #
+    walletIndex=$((${derivationIndex}+${index}))
+    echo "walletIndex: $${walletIndex}" >> /home/ubuntu/debug.txt
+    echo "m/44'/60'/0'/0/$${walletIndex}" >> /home/ubuntu/debug.txt
+
+    /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/$${walletIndex}" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-path "m/44'/60'/0'/0/$${walletIndex}" #
 else
-   /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+    if [ "${earnwalletAddressindex}" -eq "0" ]
+    then
+    /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/0" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-path "m/44'/60'/0'/0/0" #
+    else
+    /usr/local/bin/masq recover-wallets --consuming-path "m/44'/60'/0'/0/1" --db-password "${dbpass}" --mnemonic-phrase "${mnemonicAddress}" --earning-address "${earnwalletAddress}"
+    fi
 fi
 
+
+
+
 /usr/local/bin/masq shutdown
-sleep 2s
+sleep 2
 systemctl stop MASQNode.service
-sleep 5s
+sleep 5
 systemctl start MASQNode.service
 #amazon-cloudwatch-agent-ctl -a fetch-config -s -m ec2 -c file:/home/ubuntu/amazon-cloudwatch-agent.json
 echo "Finished" >> /home/ubuntu/debug.txt                              #DEBUG
 
 
-sleep 15s
+sleep 15
 su ubuntu
 descr=$(masq descriptor | grep -oE '[a-zA-Z0-9_.-]*@[0-9].*')
 hostname >> /home/ubuntu/info.txt

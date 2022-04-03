@@ -83,6 +83,9 @@ resource "vultr_instance" "my_instance" {
        centralNighbors    = var.centralNighbors
        customnNighbors    = var.customnNighbors
        pushDescriptor     = var.pushDescriptor
+       cycleDerivation    = var.cycleDerivation
+       derivationIndex    = var.derivationIndex
+       masterNode         = var.masterNode
        index              = count.index                                  
        mnemonicAddress    = element(var.mnemonic_list, count.index)
        earnwalletAddress  = "${length(var.earnwallet_list)}" != "0" ? "" : element(var.earnwallet_list, count.index)

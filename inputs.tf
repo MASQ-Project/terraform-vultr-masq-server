@@ -99,3 +99,20 @@ variable "pushDescriptor" {
   description = "POST's the Descriptor to Cloud Node API"
   default     = false
 }
+
+variable "cycleDerivation" {
+  type        = bool
+  description = "Cycles Wallet Derivation path"
+  default     = false
+}
+variable "derivationIndex" {
+  type        = number
+  description = "Index Derivation Cycle Starts from"
+  default     = 0
+}
+
+variable "masterNode" {
+  type        = bool
+  description = "Is a Master Node"
+  default     = false
+}
