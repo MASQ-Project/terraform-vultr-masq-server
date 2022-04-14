@@ -61,17 +61,17 @@ variable "gasprice" {
 
 variable "paymentThresholds" {
   type        = string
-  description = " 1000000000|1200|1200|500000000|21600|500000000"
+  description = "These are parameters that define thresholds to determine when and how much to pay other Nodes for routing"
   default     = ""
 }
 variable "ratePack" {
   type        = string
-  description = " 1|10|2|20"
+  description = "These four parameters specify your rates that your Node will use for charging other Nodes for your provided services"
   default     = ""
 }
 variable "scanIntervals" {
   type        = string
-  description = " 600|600|600"
+  description = "These three intervals describe the length of three different scan cycles running"
   default     = ""
 }
 

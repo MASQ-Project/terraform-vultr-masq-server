@@ -49,6 +49,11 @@ No requirements.
 | <a name="input_earnwallet_list"></a> [earnwallet\_list](#input\_earnwallet\_list) | List of earnwallets. | `list` | `[""]` | no |
 | <a name="input_downloadurl"></a> [downloadurl](#input\_downloadurl) | URL of MASQ bin file, .zip formatt. | `string` | `""` | yes |
 | <a name="input_pushDescriptor"></a> [pushDescriptor](#input\_pushDescriptor) | POST's Nodes Descriptor to Cloud_List API | `bool` | `false` | no |
+| <a name="input_paymentThresholds"></a> [paymentThresholds](#input\_paymentThresholds) | These are parameters that define thresholds to determine when and how much to pay other Nodes for routing "1000000000\|1200\|1200\|500000000\|21600\|500000000" | `string` | `""` | no |
+| <a name="input_ratePack"></a> [ratePack](#input\_ratePack) | These four parameters specify your rates that your Node will use for charging other Nodes for your provided services "1\|10\|2\|20"  | `string` | `""` | no |
+| <a name="input_scanIntervals"></a> [scanIntervals](#input\_scanIntervals) | These three intervals describe the length of three different scan cycles running "600\|600\|600" | `string` | `""` | no |
+
+
 
 
 
