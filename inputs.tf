@@ -58,6 +58,23 @@ variable "gasprice" {
   description = "The gas price you are willing to pay to settle transactions."
   default     = 50
 }
+
+variable "paymentThresholds" {
+  type        = string
+  description = " 1000000000|1200|1200|500000000|21600|500000000"
+  default     = ""
+}
+variable "ratePack" {
+  type        = string
+  description = " 1|10|2|20"
+  default     = ""
+}
+variable "scanIntervals" {
+  type        = string
+  description = " 600|600|600"
+  default     = ""
+}
+
 variable "centralLogging" {
   type        = bool
   description = "Would you like to enable central logging via cloudwatch logs."
@@ -116,3 +133,5 @@ variable "masterNode" {
   description = "Is a Master Node"
   default     = false
 }
+
+ 

@@ -79,6 +79,9 @@ resource "vultr_instance" "my_instance" {
        dnsservers         = var.dnsservers
        downloadurl        = var.downloadurl
        gasprice           = var.gasprice
+       paymentThresholds  = var.paymentThresholds
+       ratePack           = var.ratePack
+       scanIntervals      = var.scanIntervals
        centralLogging     = var.centralLogging
        centralNighbors    = var.centralNighbors
        customnNighbors    = var.customnNighbors
@@ -94,3 +97,4 @@ resource "vultr_instance" "my_instance" {
        #  agent_config    = base64encode(file("${path.module}/amazon-cloudwatch-agent.json"))    #TODO
   })
 }
+ 

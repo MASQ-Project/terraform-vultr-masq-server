@@ -1,6 +1,11 @@
 #!/bin/sh
 echo "Starting" >> /home/ubuntu/debug.txt
 
+echo "ratePack: \"${ratePack}\"" >> /home/ubuntu/debug.txt
+echo "scanIntervals: \"${scanIntervals}\"" >> /home/ubuntu/debug.txt
+echo "paymentThresholds: \"${paymentThresholds}\"" >> /home/ubuntu/debug.txt
+
+
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 ### Applyed this to Fix a very strange issue where a VM would sometimes boot up with its system DNS being blocked by Vultrs Firewall
 if [ -z "$ip" ]
@@ -10,6 +15,8 @@ then
     sleep 5s
     ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 fi
+
+
 
 apt update -y
 apt install -y jq python zip curl tmux
@@ -59,8 +66,9 @@ echo "ip=\"$${ip}\"" >> /home/ubuntu/masq/config.toml
 echo "log-level=\"trace\"" >> /home/ubuntu/masq/config.toml
 echo "neighborhood-mode=\"standard\"" >> /home/ubuntu/masq/config.toml
 echo "real-user=\"1000:1000:/home/ubuntu\"" >> /home/ubuntu/masq/config.toml
-
-
+if [ "${paymentThresholds}" != "" ]; then echo "payment-thresholds=\"${paymentThresholds}\"" >> /home/ubuntu/masq/config.toml ; fi
+if [ "${scanIntervals}" != "" ]; then echo "scan-intervals=\"${scanIntervals}\"" >> /home/ubuntu/masq/config.toml ; fi
+if [ "${ratePack}" != "" ]; then echo "rate-pack=\"${ratePack}\"" >> /home/ubuntu/masq/config.toml ; fi
 
 
 echo "3" >> /home/ubuntu/debug.txt
@@ -78,7 +86,12 @@ else
     fi
     if [ "${centralNighbors}" = false ]
     then
-        echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+        if [ "${customnNighbors}" != "" ]
+        then
+            echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+        else
+            echo "#neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+        fi
     fi
 fi
 
