@@ -5,13 +5,11 @@ This module's purpose is to automatically deploy an VM to Vultr and have it conf
 We assume you have some working knowledge of Terraform to consume this module.
 ```HCL
 module "masq_node" {
-  source            = "github.com/MASQ-Project/terraform-vultr-masq-server?ref=v0.0.1"
+  source            = "github.com/MASQ-Project/terraform-vultr-masq-server?ref=v0.0.7"
   API_KEY           = "********* Vultr API Key *********"
   downloadurl       = "http://download.location/masq.zip"
   customnNighbors   = "MASQ Nighbors ID"
-  mnemonic_list     = [ 
-    "Test Workds One Two Thhee" 
-    ]
+  mnemonic_list     = [ "mnemonic phrase" ]
 }
 ```
 <!-- BEGIN_TF_DOCS -->
