@@ -16,7 +16,7 @@ then
     ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 fi
 
-
+ 
 
 apt update -y
 apt install -y jq python zip curl tmux

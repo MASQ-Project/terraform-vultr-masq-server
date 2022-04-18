@@ -41,7 +41,9 @@ No requirements.
 | <a name="input_dbpass"></a> [dbpass](#input\_dbpass) | The password you would like to use for the MASQ DB. | `string` | `"Whynotchangeme123"` | no |
 | <a name="input_dnsservers"></a> [dnsservers](#input\_dnsservers) | The DNS servers to use to resolve URLs for requests. | `string` | `"1.0.0.1,1.1.1.1,8.8.8.8,9.9.9.9"` | no |
 | <a name="input_gasprice"></a> [gasprice](#input\_gasprice) | The gas price you are willing to pay to settle transactions. | `number` | `50` | no |
-| <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The name of the SSH Key Pair you want to use. | `string` | `""` | no |
+| <a name="input_paymentThresholds"></a> [paymentThresholds](#input\_paymentThresholds) | These are parameters that define thresholds to determine when and how much to pay other Nodes for routing "1000000000\|1200\|1200\|500000000\|21600\|500000000" | `string` | `""` | no |
+| <a name="input_ratePack"></a> [ratePack](#input\_ratePack) | These four parameters specify your rates that your Node will use for charging other Nodes for your provided services "1\|10\|2\|20"  | `string` | `""` | no |
+| <a name="input_scanIntervals"></a> [scanIntervals](#input\_scanIntervals) | These three intervals describe the length of three different scan cycles running "600\|600\|600" | `string` | `""` | no |
 | <a name="input_customnNighbors"></a> [customnNighbors](#input\_customnNighbors) | Node Descriptors for connecting to the MASQ network. Separate with a ','. | `string` | `""` | no |
 | <a name="input_centralNighbors"></a> [centralNighbors](#input\_centralNighbors) | Gets official MASQ Node Descriptors. [customnNighbors](#input\_customnNighbors) will be ignored | `bool` | `false` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances to create. | `number` | `1` | no |
@@ -49,15 +51,11 @@ No requirements.
 | <a name="input_earnwallet_list"></a> [earnwallet\_list](#input\_earnwallet\_list) | List of earnwallets. | `list` | `[""]` | no |
 | <a name="input_downloadurl"></a> [downloadurl](#input\_downloadurl) | URL of MASQ bin file, .zip formatt. | `string` | `""` | yes |
 | <a name="input_pushDescriptor"></a> [pushDescriptor](#input\_pushDescriptor) | POST's Nodes Descriptor to Cloud_List API | `bool` | `false` | no |
-| <a name="input_paymentThresholds"></a> [paymentThresholds](#input\_paymentThresholds) | These are parameters that define thresholds to determine when and how much to pay other Nodes for routing "1000000000\|1200\|1200\|500000000\|21600\|500000000" | `string` | `""` | no |
-| <a name="input_ratePack"></a> [ratePack](#input\_ratePack) | These four parameters specify your rates that your Node will use for charging other Nodes for your provided services "1\|10\|2\|20"  | `string` | `""` | no |
-| <a name="input_scanIntervals"></a> [scanIntervals](#input\_scanIntervals) | These three intervals describe the length of three different scan cycles running "600\|600\|600" | `string` | `""` | no |
-
-
-
-
-
-
+| <a name="input_masterNode"></a> [masterNode](#input\_masterNode) | Use this to set Node as Master. | `bool` | `false` | no |
+| <a name="input_cycleDerivation"></a> [cycleDerivation](#input\_cycleDerivation) | Cycles Wallet Derivation path by 1 for each node Created. | `bool` | `false` | no |
+| <a name="input_derivationIndex"></a> [derivationIndex](#input\_derivationIndex) | Sets Derivation Index Start. | `number` | `0` | no |
+| <a name="input_sshKey"></a> [sshKey](#input\_sshKey) | SSH Pub Key | `string` | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbz5Xvn3cBuM1YuwFjI90gNJy0M/6XUXL/D5vFscxYk` | no |
+| <a name="input_sshKeyName"></a> [sshKeyName](#input\_sshKeyName) | SSH Pub Key Nmae | `string` | `keyName` | no |
 
 
 ## Outputs

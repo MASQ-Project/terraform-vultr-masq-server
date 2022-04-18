@@ -60,41 +60,48 @@ resource "vultr_firewall_rule" "firewallrule2" {
     notes                = "Enable MASQ Clandestine Port v6"
 }
 
+# Create ssh key resource
+resource "vultr_ssh_key" "my_ssh_key" {
+  name = var.sshKeyName
+  ssh_key = var.sshKey
+}
+
 # Creates VM Instance
 resource "vultr_instance" "my_instance" {
-    count                = var.instance_count
-    tag                  = "${var.name}"
-    label                = "${var.name}-${count.index + 1}"
-    hostname             = "${var.name}-${count.index + 1}"
-    plan                 = var.vultr_plan
-    region               = var.vultr_region
-    os_id                = var.vultr_os
-    firewall_group_id    = vultr_firewall_group.node_firewall.id
-   
-    user_data = templatefile("${path.module}/config.tpl", {
-       chain              = var.chain
-       bcsurl             = var.bcsurl
-       clandestine_port   = var.clandestine_port != null ? var.clandestine_port : random_integer.port.result
-       dbpass             = var.dbpass
-       dnsservers         = var.dnsservers
-       downloadurl        = var.downloadurl
-       gasprice           = var.gasprice
-       paymentThresholds  = var.paymentThresholds
-       ratePack           = var.ratePack
-       scanIntervals      = var.scanIntervals
-       centralLogging     = var.centralLogging
-       centralNighbors    = var.centralNighbors
-       customnNighbors    = var.customnNighbors
-       pushDescriptor     = var.pushDescriptor
-       cycleDerivation    = var.cycleDerivation
-       derivationIndex    = var.derivationIndex
-       masterNode         = var.masterNode
-       index              = count.index                                  
-       mnemonicAddress    = element(var.mnemonic_list, count.index)
-       earnwalletAddress  = "${length(var.earnwallet_list)}" != "0" ? "" : element(var.earnwallet_list, count.index)
-       earnwalletAddressindex  = "${length(var.earnwallet_list)}"
-       agent_config       = ""                                                                   #TODO
-       #  agent_config    = base64encode(file("${path.module}/amazon-cloudwatch-agent.json"))    #TODO
+  count                = var.instance_count
+  tag                  = "${var.name}"
+  label                = "${var.name}-${count.index + 1}"
+  hostname             = "${var.name}-${count.index + 1}"
+  plan                 = var.vultr_plan
+  region               = var.vultr_region
+  os_id                = var.vultr_os
+  firewall_group_id    = vultr_firewall_group.node_firewall.id
+  ssh_key_ids          = [vultr_ssh_key.my_ssh_key.id]
+
+  user_data = templatefile("${path.module}/config.tpl", {
+    chain              = var.chain
+    bcsurl             = var.bcsurl
+    clandestine_port   = var.clandestine_port != null ? var.clandestine_port : random_integer.port.result
+    dbpass             = var.dbpass
+    dnsservers         = var.dnsservers
+    downloadurl        = var.downloadurl
+    gasprice           = var.gasprice
+    paymentThresholds  = var.paymentThresholds
+    ratePack           = var.ratePack
+    scanIntervals      = var.scanIntervals
+    centralLogging     = var.centralLogging
+    centralNighbors    = var.centralNighbors
+    customnNighbors    = var.customnNighbors
+    pushDescriptor     = var.pushDescriptor
+    cycleDerivation    = var.cycleDerivation
+    derivationIndex    = var.derivationIndex
+    masterNode         = var.masterNode
+    index              = count.index                                  
+    mnemonicAddress    = element(var.mnemonic_list, count.index)
+    earnwalletAddress  = "${length(var.earnwallet_list)}" != "0" ? "" : element(var.earnwallet_list, count.index)
+    earnwalletAddressindex  = "${length(var.earnwallet_list)}"
+    agent_config       = ""                                                                   #TODO
+    #  agent_config    = base64encode(file("${path.module}/amazon-cloudwatch-agent.json"))    #TODO
   })
 }
  

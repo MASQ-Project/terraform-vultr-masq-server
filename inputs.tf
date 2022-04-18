@@ -23,11 +23,6 @@ variable "clandestine_port" {
   default     = null
   description = "This is the port you want MASQ to listen on for clandestine traffic.  This will be used for your config.toml and SG settings."
 }
-variable "key_name" {
-  type        = list
-  description = "The name of the AWS Key Pair you want to use."
-  default     = [""]
-}
 variable "name" {
   type        = string
   description = "The name you would like to give the instance.  This is purely for use inside of AWS, it won't show on the MASQ Network."
@@ -58,7 +53,6 @@ variable "gasprice" {
   description = "The gas price you are willing to pay to settle transactions."
   default     = 50
 }
-
 variable "paymentThresholds" {
   type        = string
   description = "These are parameters that define thresholds to determine when and how much to pay other Nodes for routing"
@@ -74,7 +68,6 @@ variable "scanIntervals" {
   description = "These three intervals describe the length of three different scan cycles running"
   default     = ""
 }
-
 variable "centralLogging" {
   type        = bool
   description = "Would you like to enable central logging via cloudwatch logs."
@@ -110,13 +103,11 @@ variable "downloadurl" {
   description = "URL of MASQ bin file, .zip formatt"
   default     = ""
 }
-
 variable "pushDescriptor" {
   type        = bool
   description = "POST's the Descriptor to Cloud Node API"
   default     = false
 }
-
 variable "cycleDerivation" {
   type        = bool
   description = "Cycles Wallet Derivation path"
@@ -127,11 +118,18 @@ variable "derivationIndex" {
   description = "Index Derivation Cycle Starts from"
   default     = 0
 }
-
 variable "masterNode" {
   type        = bool
   description = "Is a Master Node"
   default     = false
 }
-
- 
+variable "sshKeyName" {
+  type        = string
+  description = "Name tag for SSH Key"
+  default     = "keyName"
+}
+variable "sshKey" {
+  type        = string
+  description = "Ssh Key"
+  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbz5Xvn3cBuM1YuwFjI90gNJy0M/6XUXL/D5vFscxYk"
+}
