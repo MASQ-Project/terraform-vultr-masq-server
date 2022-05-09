@@ -53,7 +53,7 @@ No requirements.
 | <a name="input_cycleDerivation"></a> [cycleDerivation](#input\_cycleDerivation) | Cycles Wallet Derivation path by 1 for each node Created. | `bool` | `false` | no |
 | <a name="input_derivationIndex"></a> [derivationIndex](#input\_derivationIndex) | Sets Derivation Index Start. | `number` | `0` | no |
 | <a name="input_sshKey"></a> [sshKey](#input\_sshKey) | SSH Pub Key | `string` | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbz5Xvn3cBuM1YuwFjI90gNJy0M/6XUXL/D5vFscxYk` | no |
-| <a name="input_sshKeyName"></a> [sshKeyName](#input\_sshKeyName) | SSH Pub Key Nmae | `string` | `keyName` | no |
+| <a name="input_sshKeyName"></a> [sshKeyName](#input\_sshKeyName) | SSH Pub Key Name | `string` | `keyName` | no |
 
 
 ## Outputs

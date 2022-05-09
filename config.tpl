@@ -32,8 +32,12 @@ fi
 
 curl -so /home/ubuntu/masqBin.zip ${downloadurl}
 unzip /home/ubuntu/masqBin.zip -d /home/ubuntu/
-cp /home/ubuntu/generated/bin/MASQNode /usr/local/bin/MASQNode
-cp /home/ubuntu/generated/bin/masq /usr/local/bin/masq
+
+mv /home/ubuntu/MASQNode /usr/local/bin/MASQNode
+mv /home/ubuntu/masq /usr/local/bin/masq
+# cp /home/ubuntu/generated/bin/MASQNode /usr/local/bin/MASQNode
+# cp /home/ubuntu/generated/bin/masq /usr/local/bin/masq
+
 sudo chmod 755 /usr/local/bin/MASQNode
 sudo chmod 755 /usr/local/bin/masq
 mkdir /home/ubuntu/masq
