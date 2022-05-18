@@ -96,6 +96,7 @@ resource "vultr_instance" "my_instance" {
     cycleDerivation    = var.cycleDerivation
     derivationIndex    = var.derivationIndex
     masterNode         = var.masterNode
+    randomNighbors     = var.randomNighbors
     index              = count.index                                  
     mnemonicAddress    = element(var.mnemonic_list, count.index)
     earnwalletAddress  = "${length(var.earnwallet_list)}" != "0" ? "" : element(var.earnwallet_list, count.index)

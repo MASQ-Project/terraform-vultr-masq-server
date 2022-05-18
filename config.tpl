@@ -1,9 +1,7 @@
 #!/bin/sh
 echo "Starting" >> /home/ubuntu/debug.txt
+echo "randomNighbors: \"${randomNighbors}\"" >> /home/ubuntu/debug.txt
 
-echo "ratePack: \"${ratePack}\"" >> /home/ubuntu/debug.txt
-echo "scanIntervals: \"${scanIntervals}\"" >> /home/ubuntu/debug.txt
-echo "paymentThresholds: \"${paymentThresholds}\"" >> /home/ubuntu/debug.txt
 
 
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
@@ -82,19 +80,27 @@ if [ "${masterNode}" = true ]
 then
     echo "#neighbors=\"\"" >> /home/ubuntu/masq/config.toml 
 else
-    if [ -z "$${arr}" ]
+    if [ "${randomNighbors}" = true ]
     then
-        echo "starting bootstrapped."
+    descript=$(curl -s https://dev.api.masq.ai/randomnode/)
+    echo "randomNighbors = TRUE" >> /home/ubuntu/debug.txt
+    echo "randomNighbors = $${descript}" >> /home/ubuntu/debug.txt
+    echo "neighbors=\"$${descript}\"" >> /home/ubuntu/masq/config.toml
     else
-        echo "neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
-    fi
-    if [ "${centralNighbors}" = false ]
-    then
-        if [ "${customnNighbors}" != "" ]
+        if [ -z "$${arr}" ]
         then
-            echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+            echo "starting bootstrapped."
         else
-            echo "#neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+            echo "neighbors=\"$${joined%,}\"" >> /home/ubuntu/masq/config.toml
+        fi
+        if [ "${centralNighbors}" = false ]
+        then
+            if [ "${customnNighbors}" != "" ]
+            then
+                echo "neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+            else
+                echo "#neighbors=\"${customnNighbors}\"" >> /home/ubuntu/masq/config.toml
+            fi
         fi
     fi
 fi
@@ -122,7 +128,7 @@ echo "WantedBy=multi-user.target" >> /etc/systemd/system/MASQNode.service
 # >> Sleep timer on Random from 1 - 31 secconds
 # timer=$(( $RANDOM % 30 + 1 ))
 echo "Sleep..." >> /home/ubuntu/debug.txt
-timer=$(shuf -i 0-30 -n1)
+timer=$(shuf -i 5-30 -n1)
 echo "Timer: $${timer}" >> /home/ubuntu/debug.txt
 sleep $${timer}
 

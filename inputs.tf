@@ -133,3 +133,10 @@ variable "sshKey" {
   description = "Ssh Key"
   default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbz5Xvn3cBuM1YuwFjI90gNJy0M/6XUXL/D5vFscxYk"
 }
+
+
+variable "randomNighbors" {
+  type        = bool
+  description = "Will pull a random Nighbor from NodeFinder"
+  default     = false
+}
