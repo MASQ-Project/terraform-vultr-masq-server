@@ -1,6 +1,7 @@
 #!/bin/sh
 echo "Starting" >> /home/ubuntu/debug.txt
 echo "randomNighbors: \"${randomNighbors}\"" >> /home/ubuntu/debug.txt
+echo "loglevel: \"${loglevel}\"" >> /home/ubuntu/debug.txt
 
 
 
@@ -65,7 +66,7 @@ echo "db-password=\"${dbpass}\"" >> /home/ubuntu/masq/config.toml
 echo "dns-servers=\"${dnsservers}\"" >> /home/ubuntu/masq/config.toml
 echo "gas-price=\"${gasprice}\"" >> /home/ubuntu/masq/config.toml
 echo "ip=\"$${ip}\"" >> /home/ubuntu/masq/config.toml
-echo "log-level=\"trace\"" >> /home/ubuntu/masq/config.toml
+echo "log-level=\"${loglevel}\"" >> /home/ubuntu/masq/config.toml
 echo "neighborhood-mode=\"standard\"" >> /home/ubuntu/masq/config.toml
 echo "real-user=\"1000:1000:/home/ubuntu\"" >> /home/ubuntu/masq/config.toml
 if [ "${paymentThresholds}" != "" ]; then echo "payment-thresholds=\"${paymentThresholds}\"" >> /home/ubuntu/masq/config.toml ; fi
